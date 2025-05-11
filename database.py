@@ -26,8 +26,12 @@ class MosqueDB:
     return mosques
   
   def search(self, name):
+    if name == '':
+      return 0
     self.cur.execute("SELECT * FROM mosque WHERE name LIKE ?", ('%' + name + '%',))
     i = self.cur.fetchone()
+    if self.cur.rowcount == 0 or i == None:
+      return 0
     mosque = Mosque(id= i[0], name=i[1], mtype=i[2],address=i[3], coor=i[4],imamName=i[5])
     return mosque
   
@@ -42,8 +46,11 @@ class MosqueDB:
     self.conn.commit()
 
   def delete(self, mID):
+    if mID == '':
+      raise Exception("Enter the mosque ID")
     self.cur.execute("DELETE FROM mosque WHERE ID=?", (mID,))
     self.conn.commit()
+    return self.cur.rowcount
 
   def update(self, mosque):
     self.cur.execute("""

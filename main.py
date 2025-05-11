@@ -16,7 +16,12 @@ def displayAll(mdb,resultList):
   
 def searchName(mdb, resultList,name):
   resultList.delete(0,END)
+  name = name.strip()
   i = mdb.search(name)
+  if i == 0 :
+     messagebox.showwarning("Not found", f"There is no mosque named {name}.")
+     return
+     
   recordText = i.getDetails()
   resultList.insert(END,recordText)
   clearFields()
@@ -33,7 +38,10 @@ def addEntry(mdb, mosque):
 def deleteEntry(mdb, mid):
    try:
       resultsList.delete(0,END)
-      mdb.delete(mid)
+      rows = mdb.delete(mid)
+      if rows == 0:
+         messagebox.showwarning("Failed", f"No mosque with ID {mid} exists!")
+         return
       messagebox.showinfo("Success", f"Mosque ID '{mid}' removed successfully.")
       clearFields()
    except Exception as e:
